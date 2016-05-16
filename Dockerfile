@@ -20,5 +20,14 @@ RUN set -xe \
   && /bin/echo -e "$ORMASTER_PASSWORD\n$ORMASTER_PASSWORD" | sudo -u orca /usr/lib/jma-receipt/bin/passwd_store.sh \
   && rm -rf /tmp/* /var/lib/apt/lists/*
 
+ADD orca.dump.gz /tmp
+RUN gzip -d /tmp/orca.dump.gz
+RUN service postgresql restart \
+  && service jma-receipt stop \
+  && sudo -u orca dropdb orca \
+  && jma-setup --noinstall \
+  && sudo -u orca psql orca < /tmp/orca.dump \
+  && jma-setup \
+  && service jma-receipt start
 EXPOSE 8000
 CMD service postgresql restart && service jma-receipt start && tail -f /dev/null
