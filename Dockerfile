@@ -22,7 +22,7 @@ RUN set -xe \
 
 ADD orca.dump.gz /tmp
 RUN gzip -d /tmp/orca.dump.gz
-RUN service postgresql restart \
+RUN service postgresql start \
   && service jma-receipt stop \
   && sudo -u orca dropdb orca \
   && jma-setup --noinstall \
