@@ -11,7 +11,7 @@ RUN set -xe \
   && wget -q -O /etc/apt/sources.list.d/jma-receipt-trusty48.list https://ftp.orca.med.or.jp/pub/ubuntu/jma-receipt-trusty48.list \
   && apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y jma-receipt \
+  && apt-get install -y jma-receipt jma-certtool \
   && wget https://ftp.orca.med.or.jp/pub/data/receipt/outline/update/claim_update.tar.gz \
   && tar xvzf claim_update.tar.gz \
   && bash claim_update.sh \
