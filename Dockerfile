@@ -29,5 +29,7 @@ RUN service postgresql start \
   && sudo -u orca psql orca < /tmp/orca.dump \
   && jma-setup \
   && service jma-receipt start
+  && service postgresql restart
 EXPOSE 8000
-CMD service postgresql restart && service jma-receipt start && tail -f /dev/null
+
+CMD service jma-receipt restart && tail -f /dev/null
