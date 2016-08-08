@@ -2,6 +2,9 @@ FROM ubuntu:14.04
 
 ENV ORMASTER_PASSWORD=ormaster
 
+ADD orca.dump.gz /tmp
+RUN gzip -d /tmp/orca.dump.gz
+
 RUN apt-get -qq update
 RUN set -xe \
   && cd /tmp \
@@ -16,20 +19,11 @@ RUN set -xe \
   && tar xvzf claim_update.tar.gz \
   && bash claim_update.sh \
   && service postgresql restart \
-  && jma-setup \
-  && /bin/echo -e "$ORMASTER_PASSWORD\n$ORMASTER_PASSWORD" | sudo -u orca /usr/lib/jma-receipt/bin/passwd_store.sh \
-  && rm -rf /tmp/* /var/lib/apt/lists/*
-
-ADD orca.dump.gz /tmp
-RUN gzip -d /tmp/orca.dump.gz
-RUN service postgresql start \
-  && service jma-receipt stop \
-  && sudo -u orca dropdb orca \
   && jma-setup --noinstall \
   && sudo -u orca psql orca < /tmp/orca.dump \
   && jma-setup \
-  && service jma-receipt start
-  && service postgresql restart
+  && rm -rf /tmp/* /var/lib/apt/lists/*
+
 EXPOSE 8000
 
-CMD service jma-receipt restart && tail -f /dev/null
+CMD service postgresql restart && service jma-receipt start && tail -f /dev/null
