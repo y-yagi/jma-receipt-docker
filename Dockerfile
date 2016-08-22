@@ -4,6 +4,7 @@ ENV ORMASTER_PASSWORD=ormaster
 
 ADD orca.dump.gz /tmp
 RUN gzip -d /tmp/orca.dump.gz
+ADD start.sh /start.sh
 
 RUN apt-get -qq update
 RUN set -xe \
@@ -27,3 +28,5 @@ RUN set -xe \
 EXPOSE 8000
 
 CMD service postgresql restart && service jma-receipt start && tail -f /dev/null
+
+ENTRYPOINT ["/start.sh"]
